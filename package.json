@@ -1,0 +1,29 @@
+{
+  "name": "aurelia-protractor-plugin",
+  "version": "1.0.0",
+  "description": "Protractor plugin for Aurelia.",
+  "keywords": [
+    "aurelia",
+    "tools"
+  ],
+  "homepage": "http://aurelia.io",
+  "bugs": {
+    "url": "https://github.com/aurelia/protractor-plugin/issues"
+  },
+  "license": "MIT",
+  "author": "Rob Eisenberg <rob@bluespire.com> (http://robeisenberg.com/)",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/aurelia/protractor-plugin"
+  },
+  "dependencies": {
+    "@types/selenium-webdriver": "^2.53.33"
+  },
+  "peerDependencies": {
+    "protractor": ">=4.0.10"
+  },
+  "devDependencies": {
+    "protractor": "^4.0.10"
+  }
+}
