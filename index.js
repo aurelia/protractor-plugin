@@ -21,7 +21,7 @@ function addValueBindLocator() {
 
 function loadAndWaitForAureliaPage(pageUrl) {
   browser.get(pageUrl);
-  return browser.executeAsyncScript(
+  return browser.executeScript(
     'var cb = arguments[arguments.length - 1];' +
     'if (window.webpackJsonp && document.querySelector("[aurelia-app]")) { cb("Aurelia composed") }' +
     'document.addEventListener("aurelia-composed", function (e) {' +
@@ -33,7 +33,7 @@ function loadAndWaitForAureliaPage(pageUrl) {
 }
 
 function waitForRouterComplete() {
-  return browser.executeAsyncScript(
+  return browser.executeScript(
     'var cb = arguments[arguments.length - 1];' +
     'document.querySelector("[aurelia-app]")' +
     '.aurelia.subscribeOnce("router:navigation:complete", function() {' +
