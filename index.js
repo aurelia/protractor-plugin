@@ -20,27 +20,54 @@ function addValueBindLocator() {
 }
 
 function loadAndWaitForAureliaPage(pageUrl) {
-  browser.get(pageUrl);
-  return browser.executeScript(
-    'var cb = arguments[arguments.length - 1];' +
-    'if (window.webpackJsonp && document.querySelector("[aurelia-app]")) { cb("Aurelia composed") }' +
-    'document.addEventListener("aurelia-composed", function (e) {' +
-    '  cb("Aurelia App composed")' +
-    '}, false);'
-  ).then(function(result){
-    return result;
-  });
+  function onAureliaComposed(onReady) {
+    if (!!document.querySelector("[aurelia-app]")) {
+      // aurelia is already loaded and available:
+      onReady();
+    } else {
+      // we need to wait until it composes:
+      document.addEventListener("aurelia-composed", function (e) {
+        onReady();
+      }, false);
+    }
+  }
+
+  return browser.get(pageUrl).then(
+    () => browser.executeAsyncScript(onAureliaComposed)
+  );
 }
 
+let waitId = 0;
 function waitForRouterComplete() {
-  return browser.executeScript(
-    'var cb = arguments[arguments.length - 1];' +
-    'document.querySelector("[aurelia-app]")' +
-    '.aurelia.subscribeOnce("router:navigation:complete", function() {' +
-    '  cb(true)' +
-    '});'
-  ).then(function(result){
-    return result;
+  waitId++;
+
+  function registerWait(id) {
+    var aurelia = document.querySelector("[aurelia-app]").aurelia;
+    if (aurelia) {
+      aurelia.subscribeOnce("router:navigation:complete", function(e) {
+        if (!aurelia.PROTRACTOR_NAVIGATION_READY) {
+          aurelia.PROTRACTOR_NAVIGATION_READY = [id];
+        } else {
+          aurelia.PROTRACTOR_NAVIGATION_READY.push(id);
+        }
+      });
+      return true;
+    }
+  }
+
+  function isReady(id) {
+    var aurelia = document.querySelector("[aurelia-app]").aurelia;
+    if (!aurelia) { return true; }
+    return aurelia.PROTRACTOR_NAVIGATION_READY && aurelia.PROTRACTOR_NAVIGATION_READY.indexOf(id) >= 0;
+  }
+
+  return browser.executeScript(registerWait, waitId).then(function(hooked) {
+    if (!hooked) { return; }
+    // we do it this way because executeAsyncScript is blocking
+    // while browser.wait is non-blocking (it will run across consecutive frames)
+    return browser.wait(function() {
+      return browser.executeScript(isReady, waitId);
+    });
   });
 }
 
