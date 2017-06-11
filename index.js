@@ -71,8 +71,8 @@ function waitForRouterComplete() {
   });
 }
 
-/* Plugin hooks */
-exports.setup = function(config) {
+/* Plugin hook */
+function setup(config) {
   // Ignore the default Angular synchronization helpers
   browser.ignoreSynchronization = true;
 
@@ -84,7 +84,12 @@ exports.setup = function(config) {
 
   // wait for router navigations to complete
   browser.waitForRouterComplete = waitForRouterComplete;
-};
+}
 
-exports.teardown = function(config) {};
-exports.postResults = function(config) {};
+/* Plugin hooks */
+module.exports = {
+  setup: setup,
+  // we need to re-setup after each test
+  // in case the user has restartBrowserBetweenTests: true
+  postTest: setup
+}
