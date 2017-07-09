@@ -18,7 +18,7 @@
     "url": "http://github.com/aurelia/protractor-plugin"
   },
   "dependencies": {
-    "@types/selenium-webdriver": "^2.53.33"
+    "@types/selenium-webdriver": "^3.0.4"
   },
   "peerDependencies": {
     "protractor": ">=4.0.10"
