@@ -21,7 +21,7 @@ function addValueBindLocator() {
 
 function loadAndWaitForAureliaPage(pageUrl) {
   function onAureliaComposed(onReady) {
-    if (!!document.querySelector("[aurelia-app]")) {
+    if (!!document.querySelector("[aurelia-app]").aurelia) {
       // aurelia is already loaded and available:
       onReady();
     } else {
