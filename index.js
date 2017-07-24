@@ -1,24 +1,61 @@
 "use strict";
 
 /* Aurelia Protractor Plugin */
+
+// Custom Locators
 function addValueBindLocator() {
   by.addLocator('valueBind', function (bindingModel, opt_parentElement) {
-    var using = opt_parentElement || document;
-    var matches = using.querySelectorAll('*[value\\.bind="' + bindingModel +'"]');
-    var result;
+    const using = opt_parentElement || document;
+    const selector = `*[value\\.bind='${bindingModel}']`;
+    const matches = using.querySelectorAll(selector);
 
-    if (matches.length === 0) {
-      result = null;
-    } else if (matches.length === 1) {
-      result = matches[0];
-    } else {
-      result = matches;
-    }
-
-    return result;
+    return (matches.length === 0)
+      ? null
+      : (matches.length === 1)
+        ? matches[0]
+        : matches;
   });
 }
 
+function addI18nLocators() {
+  by.addLocator('i18nKey', (translationKey, strict, opt_parentElement) => {
+    const using = opt_parentElement || document;
+    const selector = `*[t${strict ? '' : '*' }='${translationKey}'], *[t\\.bind${strict ? '' : '*' }='${translationKey}']`;
+    const matches = using.querySelectorAll(selector);
+   
+    return (matches.length === 0)
+      ? null
+      : (matches.length === 1)
+        ? matches[0]
+        : matches;
+  });
+
+  by.addLocator('i18nParams', (paramsKey, strict, opt_parentElement) => {
+    const using = opt_parentElement || document;
+    const selector = `*[t-params\\.bind${strict ? '' : '*' }='${paramsKey}']`;
+    const matches = using.querySelectorAll(selector);
+    
+    return (matches.length === 0)
+      ? null
+      : (matches.length === 1)
+        ? matches[0]
+        : matches;
+  });
+
+  by.addLocator('i18nKeyAndParams', (translationKey, paramsKey, strict, opt_parentElement) => {
+    const using = opt_parentElement || document;
+    const selector = `*[t${strict ? '' : '*' }='${translationKey}'][t-params\\.bind${strict ? '' : '*' }='${paramsKey}'], *[t\\.bind${strict ? '' : '*' }='${translationKey}'][t-params\\.bind${strict ? '' : '*' }='${paramsKey}']`;
+    const matches = using.querySelectorAll(selector);
+    
+    return (matches.length === 0)
+      ? null
+      : (matches.length === 1)
+        ? matches[0]
+        : matches;
+  });
+}
+
+// Browser Helpers
 function loadAndWaitForAureliaPage(pageUrl) {
   function onAureliaComposed(onReady) {
     if (!!document.querySelector("[aurelia-app]").aurelia) {
@@ -78,6 +115,7 @@ function setup(config) {
 
   // add the aurelia specific valueBind locator
   addValueBindLocator();
+  addI18nLocators();
 
   // attach a new way to browser.get a page and wait for Aurelia to complete loading
   browser.loadAndWaitForAureliaPage = loadAndWaitForAureliaPage;
