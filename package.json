@@ -1,6 +1,6 @@
 {
   "name": "aurelia-protractor-plugin",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Protractor plugin for Aurelia.",
   "keywords": [
     "aurelia",
