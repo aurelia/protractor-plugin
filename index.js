@@ -58,7 +58,8 @@ function addI18nLocators() {
 // Browser Helpers
 function loadAndWaitForAureliaPage(pageUrl) {
   function onAureliaComposed(onReady) {
-    if (!!document.querySelector("[aurelia-app]").aurelia) {
+    var aa = document.querySelector("[aurelia-app]");
+    if (!!aa && a.aurelia) {
       // aurelia is already loaded and available:
       onReady();
     } else {
@@ -79,21 +80,26 @@ function waitForRouterComplete() {
   waitId++;
 
   function registerWait(id) {
-    var aurelia = document.querySelector("[aurelia-app]").aurelia;
-    if (aurelia) {
-      aurelia.subscribeOnce("router:navigation:complete", function(e) {
-        if (!aurelia.PROTRACTOR_NAVIGATION_READY) {
-          aurelia.PROTRACTOR_NAVIGATION_READY = [id];
-        } else {
-          aurelia.PROTRACTOR_NAVIGATION_READY.push(id);
-        }
-      });
-      return true;
+    var aa = document.querySelector("[aurelia-app]");
+    if (!!aa) {
+      var aurelia = aa.aurelia;
+      if (aurelia) {
+        aurelia.subscribeOnce("router:navigation:complete", function(e) {
+          if (!aurelia.PROTRACTOR_NAVIGATION_READY) {
+            aurelia.PROTRACTOR_NAVIGATION_READY = [id];
+          } else {
+            aurelia.PROTRACTOR_NAVIGATION_READY.push(id);
+          }
+        });
+        return true;
+      }
     }
   }
 
   function isReady(id) {
-    var aurelia = document.querySelector("[aurelia-app]").aurelia;
+    var aa = document.querySelector("[aurelia-app]");
+    if (!aa) { return true; }
+    var aurelia = aa.aurelia;
     if (!aurelia) { return true; }
     return aurelia.PROTRACTOR_NAVIGATION_READY && aurelia.PROTRACTOR_NAVIGATION_READY.indexOf(id) >= 0;
   }
