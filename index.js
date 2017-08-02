@@ -22,7 +22,7 @@ function addI18nLocators() {
     const using = opt_parentElement || document;
     const selector = `*[t${strict ? '' : '*' }='${translationKey}'], *[t\\.bind${strict ? '' : '*' }='${translationKey}']`;
     const matches = using.querySelectorAll(selector);
-   
+
     return (matches.length === 0)
       ? null
       : (matches.length === 1)
@@ -34,7 +34,7 @@ function addI18nLocators() {
     const using = opt_parentElement || document;
     const selector = `*[t-params\\.bind${strict ? '' : '*' }='${paramsKey}']`;
     const matches = using.querySelectorAll(selector);
-    
+
     return (matches.length === 0)
       ? null
       : (matches.length === 1)
@@ -46,7 +46,7 @@ function addI18nLocators() {
     const using = opt_parentElement || document;
     const selector = `*[t${strict ? '' : '*' }='${translationKey}'][t-params\\.bind${strict ? '' : '*' }='${paramsKey}'], *[t\\.bind${strict ? '' : '*' }='${translationKey}'][t-params\\.bind${strict ? '' : '*' }='${paramsKey}']`;
     const matches = using.querySelectorAll(selector);
-    
+
     return (matches.length === 0)
       ? null
       : (matches.length === 1)
@@ -59,7 +59,7 @@ function addI18nLocators() {
 function loadAndWaitForAureliaPage(pageUrl) {
   function onAureliaComposed(onReady) {
     var aa = document.querySelector("[aurelia-app]");
-    if (!!aa && a.aurelia) {
+    if (!!aa && aa.aurelia) {
       // aurelia is already loaded and available:
       onReady();
     } else {
